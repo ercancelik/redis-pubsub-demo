@@ -21,15 +21,13 @@ public class DemoMessageListener implements MessageListener {
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
-        String body = new String(message.getBody());
-        String json = body.substring(body.lastIndexOf('{'));
-
-        MessageDto msg = null;
         try {
-            msg = objectMapper.readValue(json, MessageDto.class);
+            MessageDto msg = objectMapper.readValue(message.getBody(), MessageDto.class);
+            if(msg != null) {
+                log.info("Channel: {}, Message: {}", new String(message.getChannel()), msg.getBody());
+            }
         } catch (IOException e) {
             log.error("Couldn't convert json", e);
         }
-        log.info("Channel: {}, Message: {}", new String(message.getChannel()), msg.getBody());
     }
 }

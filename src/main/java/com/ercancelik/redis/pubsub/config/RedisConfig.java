@@ -11,6 +11,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Slf4j
 @Configuration
@@ -26,6 +27,7 @@ public class RedisConfig {
     @Bean
     public RedisTemplate<String, Object> redisTemplate(LettuceConnectionFactory lettuceConnectionFactory) {
         RedisTemplate<String, Object> template = new RedisTemplate<>();
+        template.setDefaultSerializer(new StringRedisSerializer());
         template.setConnectionFactory(lettuceConnectionFactory);
         return template;
     }
@@ -48,6 +50,6 @@ public class RedisConfig {
 
     @Bean
     public ChannelTopic channelTopic() {
-        return new ChannelTopic(channel);
+        return ChannelTopic.of(channel);
     }
 }
